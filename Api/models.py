@@ -1,6 +1,4 @@
 from django.db import models
-
-from django.db import models
 import re
 from django.http.response import JsonResponse
 from rest_framework import status
