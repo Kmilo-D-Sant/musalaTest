@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from .helper import proccessUrl, setLoad
+from .helper import proccessUrl, setLoad, checkLoad
 
 # Create your views here.
 @csrf_exempt
@@ -14,7 +14,7 @@ def loadDrone(request, idAux=0):
 
 @csrf_exempt
 def checkLoadDrone(request, idAux=0):
-    return True
+    return checkLoad(request, idAux=0)
 
 @csrf_exempt
 def checkIdleDrones(request, idAux=0):

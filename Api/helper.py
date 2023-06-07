@@ -73,6 +73,8 @@ def manageElements(request: Parameter, model: object, idAux: str):
             if id == 0:
                 if data["id"] != None:
                     id = data["id"]
+                    if not isNumber( data["id"]):
+                        return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
             object = model.objects.get(id=id)
             serializer = modelSerializer(object, data=data)
             if serializer.is_valid(raise_exception=True):
@@ -143,6 +145,8 @@ def setLoad(request, idAux):
     if request.method == 'PUT':
         data = JSONParser().parse(request)
         if data["droneId"] != None:
+            if not isNumber(data["droneId"]):
+                return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
             modelSerializer = generateSerializer(Drone)
             object = Drone.objects.get(id=data["droneId"])
             dataAux = {
@@ -162,7 +166,20 @@ def setLoad(request, idAux):
             if serializer.is_valid(raise_exception=True):
                 object = serializer.save()
                 return answer(serializer.data, status.HTTP_202_ACCEPTED)
-        return answer("pepe")
+    return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
+
+def checkLoad(request, idAux):
+    if request.method == 'GET':
+        data = JSONParser().parse(request)
+        if data["droneId"] != None:
+            if not isNumber( data["droneId"]):
+                return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
+            modelSerializerDrone = generateSerializer(Drone)
+            modelSerializerMedication = generateSerializer(Medication)
+            object = Drone.objects.get(id=data["droneId"])
+            medicationIdList = modelSerializerDrone(object).data["medicationLoad"]
+            medicationList = Medication.objects.filter(id__in = medicationIdList)
+            return answer(modelSerializerMedication(medicationList,  many=True).data)
     return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
 
 def proccessUrl(request, idAux):
@@ -172,5 +189,9 @@ def proccessUrl(request, idAux):
     except BaseException as err:
         return handleError(err)
 
-
+def isNumber(id):
+    exNum = "^[0-9]*$"
+    if re.match(exNum, str(id)) == None:
+        return False
+    return True
 #verificar que la suma del peso este bien

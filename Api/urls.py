@@ -8,7 +8,7 @@ app_name = 'Api'
 def createPaths():
     diccionario = {}
     diccionario['load-drone'] = views.loadDrone
-    # diccionario['check-drone-load'] = views.checkLoadDrone
+    diccionario['check-drone-load'] = views.checkLoadDrone
     # diccionario['check-idle-drones'] = views.checkIdleDrones
     # diccionario['check-drone-batrery'] = views.checkDroneBattery
     
