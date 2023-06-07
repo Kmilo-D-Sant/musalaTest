@@ -17,7 +17,7 @@ class Medication(models.Model):
     code = models.CharField("Code", max_length=100, blank=False, null=False)
     image = models.ImageField("Image", blank=False, null=False)
 
-    def validate(self):
+    def __validate__(self):
         exLetterNumberScriptUndersocre = "^[0-9a-zA-Z_-]*$"
         exLetterUpNumberUnderscore = "^[0-9A-Z_]*$"
         valid = True
@@ -59,8 +59,8 @@ class Drone(models.Model):
         if re.match(exLen, self.pk["serialNumber"].strip()) == None:
             messageError += " The serial number only permits 100 characters max and can't be empty."
             valid = False
-        if self.pk["weightLimit"] > 500 or self.pk["weightLimit"] < 0:
-            messageError += " The weight can't be bigger than 500gr or smaller than 0."
+        if self.pk["weight"] > 500 or self.pk["weight"] < 0:
+            messageError += f" The actual weigh is {self.pk['weight']} and weight can't be bigger than 500gr or smaller than 0."
             valid = False
         if self.pk["battery"] > 100 or self.pk["battery"] < 0:
             messageError += " The battery percent can't be bigger than 100 or smaller than 0."

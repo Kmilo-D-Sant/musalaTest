@@ -82,10 +82,11 @@ def manageElements(request: Parameter, model: object, idAux: str):
         if request.method == 'POST':
             data = JSONParser().parse(request)
             serializer = modelSerializer(data=data)
-            droneAux = Drone(data)
-            weight = droneAux.__calculateWeight__()
-            droneAux.weight = weight
-            isValid = Drone(data).__validate__()   
+            if model == Drone:
+                droneAux = Drone(data)
+                weight = droneAux.__calculateWeight__()
+                droneAux.weight = weight
+            isValid = model(data).__validate__()   
             if isValid.status_code == status.HTTP_400_BAD_REQUEST:
                 return isValid
             if serializer.is_valid(raise_exception=True):
@@ -139,7 +140,28 @@ def handleError(err):
         return error(f"{str(type(newError))} {str(newError)}")
 
 def setLoad(request, idAux):
-    if request.method == 'POST':
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        if data["droneId"] != None:
+            modelSerializer = generateSerializer(Drone)
+            object = Drone.objects.get(id=data["droneId"])
+            dataAux = {
+            "serialNumber": object.serialNumber,
+            "model": object.model,
+            "weight": object.weight,
+            "battery": object.battery,
+            "state": object.state,
+            "medicationLoad": data["medicationLoad"]}
+            droneAux = Drone(dataAux)
+            weight = droneAux.__calculateWeight__()
+            droneAux.weight = weight
+            isValid = droneAux.__validate__() 
+            if isValid.status_code == status.HTTP_400_BAD_REQUEST:
+                return isValid
+            serializer = modelSerializer(object, data=dataAux)
+            if serializer.is_valid(raise_exception=True):
+                object = serializer.save()
+                return answer(serializer.data, status.HTTP_202_ACCEPTED)
         return answer("pepe")
     return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
 
