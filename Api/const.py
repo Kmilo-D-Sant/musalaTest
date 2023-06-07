@@ -1,0 +1,8 @@
+CHECK_DONT_EXIST = "DoesNotExist"
+CHECK_PARSE_ERROR = "ParseError"
+CHECK_KEY_ERROR = "KeyError"
+CHECK_TYPE_ERROR = "TypeError"
+CHECK_VALIDATION_ERROR = "ValidationError"
+MESSAGE_ELEMENT_NOT_EXIST = "The requested item does not exist"
+MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS = "Data does not meet the established requirements"
+MESSAGE_INVALID_PARAMETER = "Invalid parameter"
