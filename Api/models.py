@@ -20,11 +20,18 @@ class Medication(models.Model):
     def validate(self):
         exLetterNumberScriptUndersocre = "^[0-9a-zA-Z_-]*$"
         exLetterUpNumberUnderscore = "^[0-9A-Z_]*$"
+        valid = True
+        messageError = ""
         if re.match(exLetterNumberScriptUndersocre, self.pk["name"]) == None:
-            return  JsonResponse({"error":"The name allowed only letters, numbers, '-' and '_'"}, status=status.HTTP_400_BAD_REQUEST)
+            valid = False
+            messageError += " The name allowed only letters, numbers, '-' and '_'."
         if re.match(exLetterUpNumberUnderscore, self.pk["code"]) == None:
-            return  JsonResponse({"error":"The code allowed only upper case letters, underscore and numbers"}, status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse({"data": "Data is OK"}, status=status.HTTP_200_OK)
+            valid = False
+            messageError += " The code allowed only upper case letters, underscore and numbers."
+        if valid:
+            return JsonResponse({"data": "Data is OK"}, status=status.HTTP_200_OK)
+        else:
+             return  JsonResponse({"error":messageError}, status=status.HTTP_400_BAD_REQUEST)
 
 class Drone(models.Model):
     
@@ -47,15 +54,26 @@ class Drone(models.Model):
      
     def __validate__(self):
         exLen = "^(.){1,100}$"
-        
-        if re.match(exLen, self.pk["serialNumber"]) == None:
-            return JsonResponse({"error":"The name only permits 100 characters max"}, status=status.HTTP_400_BAD_REQUEST)
-        if self.pk["weightLimit"] > 500:
-            return JsonResponse({"error":"The weight can't be bigger than 500gr"}, status=status.HTTP_400_BAD_REQUEST) 
+        valid = True
+        messageError = ""
+        if re.match(exLen, self.pk["serialNumber"].strip()) == None:
+            messageError += " The serial number only permits 100 characters max and can't be empty."
+            valid = False
+        if self.pk["weightLimit"] > 500 or self.pk["weightLimit"] < 0:
+            messageError += " The weight can't be bigger than 500gr or smaller than 0."
+            valid = False
         if self.pk["battery"] > 100 or self.pk["battery"] < 0:
-            return JsonResponse({"error":"The battery percent can't be bigger than 100 or smaller than 0"}, status=status.HTTP_400_BAD_REQUEST)  
-        if self.pk["model"] in ["Lightweight", "Middleweight", "Cruiserweight", "Heavyweight"] == False:
-            return JsonResponse({"error":"Model most be one of the next four models: Lightweight, Middleweight, Cruiserweight and Heavyweight"}, status=status.HTTP_400_BAD_REQUEST)  
-        if self.pk["state"] in ["IDLE", "LOADING", "LOADED", "DELIVERING", "DELIVERED", "RETURNING"] ==False:
-            return JsonResponse({"error":"State most be one of the next six models: IDLE, LOADING, LOADED, DELIVERING, DELIVERED and RETURNING"}, status=status.HTTP_400_BAD_REQUEST) 
-
+            messageError += " The battery percent can't be bigger than 100 or smaller than 0."
+            valid = False
+        if not self.pk["model"] in ["Lightweight", "Middleweight", "Cruiserweight", "Heavyweight"]:
+            messageError += " Model most be one of the next four models: Lightweight, Middleweight, Cruiserweight and Heavyweight."
+            valid = False
+        if not self.pk["state"] in ["IDLE", "LOADING", "LOADED", "DELIVERING", "DELIVERED", "RETURNING"]:
+            messageError += " State most be one of the next six models: IDLE, LOADING, LOADED, DELIVERING, DELIVERED and RETURNING."
+            valid = False
+        if valid:
+            return JsonResponse({"data": "Data is OK"}, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({"error": messageError}, status=status.HTTP_400_BAD_REQUEST)
+                    
+   

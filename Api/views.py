@@ -7,3 +7,19 @@ from .helper import proccessUrl
 def SeeElements(request, idAux=0):
     return proccessUrl(request, idAux)
 
+
+@csrf_exempt
+def loadDrone(request, idAux=0):
+    return True
+
+@csrf_exempt
+def checkLoadDrone(request, idAux=0):
+    return True
+
+@csrf_exempt
+def checkIdleDrones(request, idAux=0):
+    return True
+
+@csrf_exempt
+def checkDroneBattery(request, idAux=0):
+    return True
