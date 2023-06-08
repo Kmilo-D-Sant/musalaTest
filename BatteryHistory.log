@@ -1181,3 +1181,168 @@ INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-
 WARNING:django.request:Bad Request: /manage-drone
 INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:04:25.971900'}
 INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:05:24.817627'}
+WARNING:django.request:Not Acceptable: /manage-drone
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:07:10.205625'}
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\models.py changed, reloading.
+WARNING:django.request:Not Acceptable: /manage-drone
+WARNING:django.request:Not Acceptable: /manage-drone
+WARNING:django.request:Not Acceptable: /manage-drone
+WARNING:django.request:Not Acceptable: /manage-drone
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:09:06.227684'}
+WARNING:django.request:Not Acceptable: /manage-drone
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\models.py changed, reloading.
+WARNING:django.request:Not Acceptable: /manage-drone
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:12:47.247980'}
+WARNING:django.request:Bad Request: /manage-drone
+WARNING:django.request:Bad Request: /manage-drone
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.
+WARNING:django.request:Not Found: /manage-drone
+WARNING:django.request:Not Acceptable: /load-drone
+ERROR:django.request:Internal Server Error: /load-drone
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 13, in loadDrone
+    return setLoad(request, idAux)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 186, in setLoad
+    return isValid
+AttributeError: 'Drone' object has no attribute '__calculateWeight__'
+ERROR:django.request:Internal Server Error: /load-drone
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 13, in loadDrone
+    return setLoad(request, idAux)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 186, in setLoad
+    return isValid
+AttributeError: 'Drone' object has no attribute '__calculateWeight__'
+ERROR:django.request:Internal Server Error: /load-drone
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 13, in loadDrone
+    return setLoad(request, idAux)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 186, in setLoad
+    return isValid
+AttributeError: 'Drone' object has no attribute '__calculateWeight__'
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:20:40.520825'}
+INFO:root:{'droneId': 7, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:20:40.520825'}
+INFO:root:{'droneId': 8, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:20:40.520825'}
+ERROR:django.request:Internal Server Error: /load-drone
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 13, in loadDrone
+    return setLoad(request, idAux)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 184, in setLoad
+    isValid = Drone(dataAux).__validate__()
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\models.py", line 53, in __validate__
+    if self.pk["weightLimit"] > 500 or self.pk["weightLimit"] < 0:
+KeyError: 'weightLimit'
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.
+ERROR:django.request:Internal Server Error: /load-drone
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 13, in loadDrone
+    return setLoad(request, idAux)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 184, in setLoad
+    isValid = Drone(dataAux).__validate__()
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\models.py", line 53, in __validate__
+    if self.pk["weightLimit"] > 500 or self.pk["weightLimit"] < 0:
+KeyError: 'weightLimit'
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:21:51.913900'}
+INFO:root:{'droneId': 7, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:21:51.914898'}
+INFO:root:{'droneId': 8, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:21:51.914898'}
+WARNING:django.request:Not Acceptable: /load-drone
+WARNING:django.request:Not Acceptable: /load-drone
+WARNING:django.request:Not Acceptable: /load-drone
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:26:06.305522'}
+INFO:root:{'droneId': 7, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:26:06.306520'}
+INFO:root:{'droneId': 8, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:26:06.306520'}
+INFO:root:{'droneId': 9, 'serialNumber': 'AAA_3000_ABC_VS-0.1', 'battery': 90, 'date': '2023-06-07 22:26:06.307515'}
+WARNING:django.request:Not Acceptable: /load-drone
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.
+WARNING:django.request:Not Acceptable: /load-drone
+WARNING:django.request:Not Acceptable: /load-drone
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:28:16.237945'}
+INFO:root:{'droneId': 7, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:28:16.238728'}
+INFO:root:{'droneId': 8, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:28:16.238728'}
+INFO:root:{'droneId': 9, 'serialNumber': 'AAA_3000_ABC_VS-0.1', 'battery': 90, 'date': '2023-06-07 22:28:16.238728'}
+WARNING:django.request:Not Acceptable: /load-drone
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.
+ERROR:django.request:Internal Server Error: /check-drone-load
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 17, in checkLoadDrone
+    return checkLoad(request)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 202, in checkLoad
+    object = Drone.objects.get(id=data["droneId"])
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\db\models\query.py", line 650, in get
+    raise self.model.DoesNotExist(
+Api.models.Drone.DoesNotExist: Drone matching query does not exist.
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:35:26.719064'}
+INFO:root:{'droneId': 7, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:35:26.720062'}
+INFO:root:{'droneId': 8, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:35:26.720062'}
+INFO:root:{'droneId': 9, 'serialNumber': 'AAA_3000_ABC_VS-0.1', 'battery': 90, 'date': '2023-06-07 22:35:26.720062'}
+WARNING:django.request:Not Acceptable: /check-drone-load
+ERROR:django.request:Internal Server Error: /check-drone-load
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 17, in checkLoadDrone
+    return checkLoad(request)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 216, in checkLoad
+    object = Drone.objects.get(id=data["droneId"])
+KeyError: 'droneId'
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.
+ERROR:django.request:Internal Server Error: /check-drone-load
+Traceback (most recent call last):
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Camilo\AppData\Roaming\Python\Python39\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\views.py", line 17, in checkLoadDrone
+    return checkLoad(request)
+  File "C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py", line 216, in checkLoad
+    medicationIdList = modelSerializerDrone(object).data["medicationLoad"]
+KeyError: 'droneId'
+INFO:root:{'droneId': 6, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:37:46.846044'}
+INFO:root:{'droneId': 7, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:37:46.847073'}
+INFO:root:{'droneId': 8, 'serialNumber': 'asdasd', 'battery': 25, 'date': '2023-06-07 22:37:46.847073'}
+INFO:root:{'droneId': 9, 'serialNumber': 'AAA_3000_ABC_VS-0.1', 'battery': 90, 'date': '2023-06-07 22:37:46.847073'}
+INFO:django.utils.autoreload:C:\Users\Camilo\Desktop\Python\musalaTest\musalaTest\Api\helper.py changed, reloading.

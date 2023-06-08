@@ -81,8 +81,6 @@ def manageElements(request: Parameter, model: object, idAux: str):
                     id = data["id"]
                     if not isNumber(data["id"]):
                         return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
-            if model == Drone:
-                Drone(data).weightLimit = Drone(data).__calculateWeight__()
             isValid = model(data).__validate__()
             if isValid.status_code == status.HTTP_400_BAD_REQUEST:
                 return isValid
@@ -119,8 +117,8 @@ def error(message: str, state=status.HTTP_400_BAD_REQUEST):
     return JsonResponse({"error": message}, status=state)
 
 
-def answer(datos, estado=status.HTTP_200_OK):
-    return JsonResponse({"datos": datos}, status=estado)
+def answer(data, estado=status.HTTP_200_OK):
+    return JsonResponse({"data": data}, status=estado)
 
 
 def handleError(err):
@@ -157,15 +155,14 @@ def setLoad(request, idAux):
                 try:
                     object = Drone.objects.get(id=data["droneId"])
                 except:
-                    return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+                    return error(f"There is not coincidences for this id({data['droneId']})", status.HTTP_406_NOT_ACCEPTABLE)
         except:
             try:
                 if data["droneSerialNumber"] != None:
                     try:
-                        object = Drone.objects.get(
-                            id=data["droneSerialNumber"])
+                        object = Drone.objects.get(serialNumber=data["droneSerialNumber"])
                     except:
-                        return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+                        return error(f"There is not coincidences for this serial number({data['droneSerialNumber']})", status.HTTP_406_NOT_ACCEPTABLE)
             except:
                 return error("Please provide the droneId or droneSerialNumber field", status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -174,7 +171,7 @@ def setLoad(request, idAux):
                 dataAux = {
                     "serialNumber": object.serialNumber,
                     "model": object.model,
-                    "weight": object.weightLimit,
+                    "weightLimit": object.weightLimit,
                     "battery": object.battery,
                     "state": "LOADING",
                     "medicationLoad": data["medicationLoad"]
@@ -183,7 +180,6 @@ def setLoad(request, idAux):
             return error("Please provide the medicationLoad field", status.HTTP_406_NOT_ACCEPTABLE)
 
         modelSerializer = generateSerializer(Drone)
-        Drone(dataAux).weightLimit = Drone(dataAux).__calculateWeight__()
         isValid = Drone(dataAux).__validate__()
         if isValid.status_code == status.HTTP_400_BAD_REQUEST:
             return isValid
@@ -198,16 +194,28 @@ def setLoad(request, idAux):
 def checkLoad(request):
     if request.method == 'GET':
         data = JSONParser().parse(request)
-        if data["droneId"] != None:
-            if not isNumber(data["droneId"]):
-                return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
-            modelSerializerDrone = generateSerializer(Drone)
-            modelSerializerMedication = generateSerializer(Medication)
-            object = Drone.objects.get(id=data["droneId"])
-            medicationIdList = modelSerializerDrone(
-                object).data["medicationLoad"]
-            medicationList = Medication.objects.filter(id__in=medicationIdList)
-            return answer(modelSerializerMedication(medicationList,  many=True).data)
+        try:
+            if data["droneId"] != None:
+                if not isNumber(data["droneId"]):
+                    return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
+                try:
+                    object = Drone.objects.get(id=data["droneId"])
+                except:
+                    return error(f"There is not coincidences for this id({data['droneId']})", status.HTTP_406_NOT_ACCEPTABLE)
+        except:
+            try:
+                if data["droneSerialNumber"] != None:
+                    try:
+                        object = Drone.objects.get(serialNumber=data["droneSerialNumber"])
+                    except:
+                        return error(f"There is not coincidences for this serial number({data['droneSerialNumber']})", status.HTTP_406_NOT_ACCEPTABLE)
+            except:
+                return error("Please provide the droneId or droneSerialNumber field", status.HTTP_406_NOT_ACCEPTABLE)
+        modelSerializerDrone = generateSerializer(Drone)
+        modelSerializerMedication = generateSerializer(Medication)
+        medicationIdList = modelSerializerDrone(object).data["medicationLoad"]
+        medicationList = Medication.objects.filter(id__in=medicationIdList)
+        return answer(modelSerializerMedication(medicationList,  many=True).data)
     return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
 
 
@@ -230,15 +238,14 @@ def getDroneBattery(request, idAux=0):
                 try:
                     object = Drone.objects.get(id=data["droneId"])
                 except:
-                    return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+                    return error(f"There is not coincidences for this id({data['droneId']})", status.HTTP_406_NOT_ACCEPTABLE)
         except:
             try:
                 if data["droneSerialNumber"] != None:
                     try:
-                        object = Drone.objects.get(
-                            id=data["droneSerialNumber"])
+                        object = Drone.objects.get(serialNumber=data["droneSerialNumber"])
                     except:
-                        return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+                        return error(f"There is not coincidences for this serial number({data['droneSerialNumber']})", status.HTTP_406_NOT_ACCEPTABLE)
             except:
                 return error("Please provide the droneId or droneSerialNumber field", status.HTTP_406_NOT_ACCEPTABLE)
         return answer({"battery": object.battery})

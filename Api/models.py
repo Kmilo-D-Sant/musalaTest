@@ -42,23 +42,15 @@ class Drone(models.Model):
     battery = models.IntegerField("Battery", blank=False, null=False)
     state = models.CharField("State", max_length=50, choices=STATE)
     
-    
-    
-    def __calculateWeight__(self):
-        medicationsIds = self.pk["medicationLoad"]
-        weight = 0
-        for id in medicationsIds:
-            weight += Medication.objects.get(id=id).weight
-        return weight
-     
     def __validate__(self):
         exLen = "^(.){1,100}$"
         valid = True
         messageError = ""
+        
         if re.match(exLen, self.pk["serialNumber"].strip()) == None:
             messageError += " The serial number only permits 100 characters max and can't be empty."
             valid = False
-        if self.pk["weight"] > 500 or self.pk["weight"] < 0:
+        if self.pk["weightLimit"] > 500 or self.pk["weightLimit"] < 0:
             messageError += f" The actual weigh is {self.pk['weight']} and weight can't be bigger than 500gr or smaller than 0."
             valid = False
         if self.pk["battery"] > 100 or self.pk["battery"] < 0:
@@ -73,12 +65,18 @@ class Drone(models.Model):
         if  self.pk["state"] == "LOADING" and self.pk["battery"] < 25:
             messageError += " Drones can't be LOADING if the battery level is below 25%."
             valid = False
-        if  Drone(self).__calculateWeight__() > self.pk["weightLimit"]:
+        if  calculateWeight(self.pk["medicationLoad"]) > self.pk["weightLimit"]:
             messageError += f" Total weight most be under weidhtLimit({self.pk['weightLimit']}) ."
             valid = False
         if valid:
             return JsonResponse({"data": "Data is OK"}, status=status.HTTP_200_OK)
         else:
             return JsonResponse({"error": messageError}, status=status.HTTP_400_BAD_REQUEST)
-                    
+
+
+def calculateWeight(medicationsIds):
+    weight = 0
+    for id in medicationsIds:
+        weight += Medication.objects.get(id=id).weight
+    return weight
    
