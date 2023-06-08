@@ -28,7 +28,7 @@ RETURN  =  (JSON {"data":new Drone})
 2)***loading a drone with medication items***
 URL = http://127.0.0.1:8000/load-drone (PUT)
 BODY (JSON) =    {
-			"droneId":"7" ,                                         ### this service first find the drone by the id if this field does not exist then use the serial number 
+			"droneId":"7" ,                                         ### this service first finds the drone by the id if this field does not exist then uses the serial number 
 			"droneSerialNumber":"AAA_3000_ABC_VS-0.",               ###
             "medicationLoad": [2]                                   ### Medication IDs
             
@@ -40,7 +40,7 @@ RETURN = (JSON {"data":Drone update})
             "model": "Lightweight",
             "weightLimit": 200,
             "battery": 25,
-            "state": "LOADED",                                      ### the state change to LOADED
+            "state": "LOADED",                                      ### the state changes to LOADED
             "medicationLoad": [                                     ### the new medications are add to the drone
                 2
             ]
@@ -49,7 +49,7 @@ RETURN = (JSON {"data":Drone update})
 3)***checking loaded medication items for a given drone***
 URL = http://127.0.0.1:8000/check-drone-load (GET)
 BODY (JSON) =    {
-			"droneId":"7" ,                                         ### this service first find the drone by the id if this field does not exist then use the serial number 
+			"droneId":"7" ,                                         ### this service first finds the drone by the id if this field does not exist then uses the serial number 
 			"droneSerialNumber":"AAA_3000_ABC_VS-0.",               ###
         }
 RETURN = (JSON {"data":[Medications]})
@@ -64,11 +64,11 @@ RETURN = (JSON {"data":[Medications]})
             ]
 
 4)***checking available drones for loading***
-URL = http://127.0.0.1:8000/check-idle-drones (GET)
+URL = http://127.0.0.1:8000/check-idle-drones (GET)                  ### return a JsonObject with a drones array
 RETURN = (JSON {"data":[Drones]})
       "datos": [
         {
-            "id": 7,
+            "id": 7,                                                
             "serialNumber": "AAA_3000_ABC_VS-0.2",
             "model": "Lightweight",
             "weightLimit": 200,
