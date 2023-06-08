@@ -5,6 +5,12 @@ from rest_framework import serializers, status
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from .models import *
+import threading
+import datetime
+import logging
+import time
+
+logging.basicConfig(filename='BatteryHistory.log', encoding='utf-8', level=logging.DEBUG)
 
 
 def getModelByUrl(request):
@@ -50,7 +56,7 @@ def answer(data, state=status.HTTP_200_OK):
 
 def manageElements(request: Parameter, model: object, idAux: str):
     try:
- 
+
         id = strToInt(idAux)
         if id < 0:
             return error(MESSAGE_INVALID_PARAMETER, status.HTTP_406_NOT_ACCEPTABLE)
@@ -73,8 +79,13 @@ def manageElements(request: Parameter, model: object, idAux: str):
             if id == 0:
                 if data["id"] != None:
                     id = data["id"]
-                    if not isNumber( data["id"]):
+                    if not isNumber(data["id"]):
                         return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
+            if model == Drone:
+                Drone(data).weightLimit = Drone(data).__calculateWeight__()
+            isValid = model(data).__validate__()
+            if isValid.status_code == status.HTTP_400_BAD_REQUEST:
+                return isValid
             object = model.objects.get(id=id)
             serializer = modelSerializer(object, data=data)
             if serializer.is_valid(raise_exception=True):
@@ -84,19 +95,13 @@ def manageElements(request: Parameter, model: object, idAux: str):
         if request.method == 'POST':
             data = JSONParser().parse(request)
             serializer = modelSerializer(data=data)
-            if model == Drone:
-                droneAux = Drone(data)
-                weight = droneAux.__calculateWeight__()
-                droneAux.weight = weight
-            isValid = model(data).__validate__()   
+            isValid = model(data).__validate__()
             if isValid.status_code == status.HTTP_400_BAD_REQUEST:
                 return isValid
             if serializer.is_valid(raise_exception=True):
                 if isValid.status_code == status.HTTP_200_OK:
                     object = serializer.save()
                     return answer(serializer.data, status.HTTP_201_CREATED)
-                
-                
 
         if request.method == 'DELETE':
             object = model.objects.get(id=id)
@@ -141,46 +146,128 @@ def handleError(err):
     except BaseException as newError:
         return error(f"{str(type(newError))} {str(newError)}")
 
+
 def setLoad(request, idAux):
     if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        try:
+            if data["droneId"] != None:
+                if not isNumber(data["droneId"]):
+                    return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
+                try:
+                    object = Drone.objects.get(id=data["droneId"])
+                except:
+                    return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+        except:
+            try:
+                if data["droneSerialNumber"] != None:
+                    try:
+                        object = Drone.objects.get(
+                            id=data["droneSerialNumber"])
+                    except:
+                        return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+            except:
+                return error("Please provide the droneId or droneSerialNumber field", status.HTTP_406_NOT_ACCEPTABLE)
+
+        try:
+            if data["medicationLoad"] != None:
+                dataAux = {
+                    "serialNumber": object.serialNumber,
+                    "model": object.model,
+                    "weight": object.weightLimit,
+                    "battery": object.battery,
+                    "state": "LOADING",
+                    "medicationLoad": data["medicationLoad"]
+                }
+        except:
+            return error("Please provide the medicationLoad field", status.HTTP_406_NOT_ACCEPTABLE)
+
+        modelSerializer = generateSerializer(Drone)
+        Drone(dataAux).weightLimit = Drone(dataAux).__calculateWeight__()
+        isValid = Drone(dataAux).__validate__()
+        if isValid.status_code == status.HTTP_400_BAD_REQUEST:
+            return isValid
+        dataAux["state"] = "LOADED"
+        serializer = modelSerializer(object, data=dataAux)
+        if serializer.is_valid(raise_exception=True):
+            object = serializer.save()
+            return answer(serializer.data, status.HTTP_202_ACCEPTED)
+    return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
+
+
+def checkLoad(request):
+    if request.method == 'GET':
         data = JSONParser().parse(request)
         if data["droneId"] != None:
             if not isNumber(data["droneId"]):
                 return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
-            modelSerializer = generateSerializer(Drone)
-            object = Drone.objects.get(id=data["droneId"])
-            dataAux = {
-            "serialNumber": object.serialNumber,
-            "model": object.model,
-            "weight": object.weight,
-            "battery": object.battery,
-            "state": object.state,
-            "medicationLoad": data["medicationLoad"]}
-            droneAux = Drone(dataAux)
-            weight = droneAux.__calculateWeight__()
-            droneAux.weight = weight
-            isValid = droneAux.__validate__() 
-            if isValid.status_code == status.HTTP_400_BAD_REQUEST:
-                return isValid
-            serializer = modelSerializer(object, data=dataAux)
-            if serializer.is_valid(raise_exception=True):
-                object = serializer.save()
-                return answer(serializer.data, status.HTTP_202_ACCEPTED)
-    return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
-
-def checkLoad(request, idAux):
-    if request.method == 'GET':
-        data = JSONParser().parse(request)
-        if data["droneId"] != None:
-            if not isNumber( data["droneId"]):
-                return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
             modelSerializerDrone = generateSerializer(Drone)
             modelSerializerMedication = generateSerializer(Medication)
             object = Drone.objects.get(id=data["droneId"])
-            medicationIdList = modelSerializerDrone(object).data["medicationLoad"]
-            medicationList = Medication.objects.filter(id__in = medicationIdList)
+            medicationIdList = modelSerializerDrone(
+                object).data["medicationLoad"]
+            medicationList = Medication.objects.filter(id__in=medicationIdList)
             return answer(modelSerializerMedication(medicationList,  many=True).data)
     return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
+
+
+def IdleDrones(request):
+    if request.method == 'GET':
+        modelSerializer = generateSerializer(Drone)
+        objetos = Drone.objects.filter(battery__gt=24, state="IDLE")
+        data = modelSerializer(objetos, many=True).data
+        return answer(data)
+    return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
+
+
+def getDroneBattery(request, idAux=0):
+    if request.method == 'GET':
+        data = JSONParser().parse(request)
+        try:
+            if data["droneId"] != None:
+                if not isNumber(data["droneId"]):
+                    return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
+                try:
+                    object = Drone.objects.get(id=data["droneId"])
+                except:
+                    return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+        except:
+            try:
+                if data["droneSerialNumber"] != None:
+                    try:
+                        object = Drone.objects.get(
+                            id=data["droneSerialNumber"])
+                    except:
+                        return error("There is not coincidences", status.HTTP_406_NOT_ACCEPTABLE)
+            except:
+                return error("Please provide the droneId or droneSerialNumber field", status.HTTP_406_NOT_ACCEPTABLE)
+        return answer({"battery": object.battery})
+    return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
+
+
+def getDroneBatteryLogs(request):
+    if request.method == 'GET':
+        object = Drone.objects.all()
+        dataAnswer = []
+        for drone in object:
+            dataAnswer.append({"droneId": drone.id, "serialNumber":drone.serialNumber, "battery":drone.battery, "date":str(datetime.datetime.now())})
+        
+        return answer(dataAnswer)
+    return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
+
+def getDroneBatteryLogsTest():
+    while True:
+        object = Drone.objects.all()
+        for drone in object:
+            logging.info({"droneId": drone.id, "serialNumber":drone.serialNumber, "battery":drone.battery, "date":str(datetime.datetime.now())})
+        time.sleep(600)
+        
+
+t = threading.Thread(target= getDroneBatteryLogsTest)
+t.start()
+
+
+
 
 def proccessUrl(request, idAux):
     try:
@@ -189,9 +276,14 @@ def proccessUrl(request, idAux):
     except BaseException as err:
         return handleError(err)
 
+
+
+
 def isNumber(id):
-    exNum = "^[0-9]*$"
+    exNum = "^[0-9]+$"
     if re.match(exNum, str(id)) == None:
         return False
     return True
-#verificar que la suma del peso este bien
+
+
+# verificar que la suma del peso este bien

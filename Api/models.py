@@ -38,7 +38,7 @@ class Drone(models.Model):
     serialNumber = models.CharField("Serial number", max_length=100, blank=False, null=False)
     model = models.CharField("Model", max_length=50, choices=MODELS)
     medicationLoad = models.ManyToManyField(Medication, null=True, blank=True)
-    weight = models.FloatField("Weigh limit", blank=True, null=True)
+    weightLimit = models.FloatField("Weigh limit", blank=True, null=True)
     battery = models.IntegerField("Battery", blank=False, null=False)
     state = models.CharField("State", max_length=50, choices=STATE)
     
@@ -49,7 +49,6 @@ class Drone(models.Model):
         weight = 0
         for id in medicationsIds:
             weight += Medication.objects.get(id=id).weight
-        self.pk["weight"] = weight
         return weight
      
     def __validate__(self):
@@ -70,6 +69,12 @@ class Drone(models.Model):
             valid = False
         if not self.pk["state"] in ["IDLE", "LOADING", "LOADED", "DELIVERING", "DELIVERED", "RETURNING"]:
             messageError += " State most be one of the next six models: IDLE, LOADING, LOADED, DELIVERING, DELIVERED and RETURNING."
+            valid = False
+        if  self.pk["state"] == "LOADING" and self.pk["battery"] < 25:
+            messageError += " Drones can't be LOADING if the battery level is below 25%."
+            valid = False
+        if  Drone(self).__calculateWeight__() > self.pk["weightLimit"]:
+            messageError += f" Total weight most be under weidhtLimit({self.pk['weightLimit']}) ."
             valid = False
         if valid:
             return JsonResponse({"data": "Data is OK"}, status=status.HTTP_200_OK)

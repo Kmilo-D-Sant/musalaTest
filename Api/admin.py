@@ -36,18 +36,6 @@ def createDictionaryAttributes():
                 auxField = field[field.index(".")+1: -1]
             fieldList.append(auxField)
         attributeDictionary[model] = fieldList
-    for model in [LogEntry]:
-        fieldList = []
-        fields = model.objects.model._meta.get_fields()
-        for field in fields:
-            field = str(field)
-            try:
-                auxField = field[field.index(model.__name__+"."):]
-                auxField = auxField[auxField.index(".")+1:]
-            except:
-                auxField = field[field.index(".")+1: -1]
-            fieldList.append(field)
-        attributeDictionary[model] = fieldList
     return attributeDictionary
 
 
