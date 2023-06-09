@@ -15,7 +15,7 @@ class Medication(models.Model):
     name = models.CharField("Name", max_length=50, blank=False, null=False)
     weight = models.FloatField("Weight")
     code = models.CharField("Code", max_length=100, blank=False, null=False)
-    image = models.ImageField("Image", blank=False, null=False)
+    image = models.CharField("Image", max_length=10000000,blank=False, null=False)
 
     def __validate__(self):
         exLetterNumberScriptUndersocre = "^[0-9a-zA-Z_-]*$"
@@ -35,12 +35,12 @@ class Medication(models.Model):
 
 class Drone(models.Model):
     
-    serialNumber = models.CharField("Serial number", max_length=100, blank=False, null=False)
+    serialNumber = models.CharField("Serial number", unique=True, max_length=100, blank=False, null=False)
     model = models.CharField("Model", max_length=50, choices=MODELS)
-    medicationLoad = models.ManyToManyField(Medication, null=True, blank=True)
+    medicationLoad = models.ManyToManyField(Medication, blank=True)
     weightLimit = models.FloatField("Weigh limit", blank=True, null=True)
     battery = models.IntegerField("Battery", blank=False, null=False)
-    state = models.CharField("State", max_length=50, choices=STATE)
+    state = models.CharField("State",default="IDLE", max_length=50, choices=STATE)
     
     def __validate__(self):
         exLen = "^(.){1,100}$"

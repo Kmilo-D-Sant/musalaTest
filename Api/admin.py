@@ -31,7 +31,6 @@ def createDictionaryAttributes():
             try:
                 auxField = field[field.index(model.__name__+"."):]
                 auxField = auxField[auxField.index(".")+1:]
-
             except:
                 auxField = field[field.index(".")+1: -1]
             fieldList.append(auxField)

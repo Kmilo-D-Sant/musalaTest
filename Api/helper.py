@@ -12,7 +12,6 @@ import time
 
 logging.basicConfig(filename='BatteryHistory.log', encoding='utf-8', level=logging.DEBUG)
 
-
 def getModelByUrl(request):
     urlAux = request.META["PATH_INFO"][1:]
     try:
@@ -92,14 +91,23 @@ def manageElements(request: Parameter, model: object, idAux: str):
 
         if request.method == 'POST':
             data = JSONParser().parse(request)
-            serializer = modelSerializer(data=data)
-            isValid = model(data).__validate__()
+            if model == Drone:
+                droneAux = {
+                            "serialNumber": data["serialNumber"],     
+                            "model": data["model"],
+                            "weightLimit": data["weightLimit"],
+                            "battery": data["battery"],
+                            "state": "IDLE",
+                            "medicationLoad": [       
+                            ]
+                    }
+            serializer = modelSerializer(data=droneAux)
+            isValid = model(droneAux).__validate__()
             if isValid.status_code == status.HTTP_400_BAD_REQUEST:
                 return isValid
             if serializer.is_valid(raise_exception=True):
-                if isValid.status_code == status.HTTP_200_OK:
-                    object = serializer.save()
-                    return answer(serializer.data, status.HTTP_201_CREATED)
+                object = serializer.save()
+                return answer(serializer.data, status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
             object = model.objects.get(id=id)
@@ -150,6 +158,8 @@ def setLoad(request, idAux):
         data = JSONParser().parse(request)
         try:
             if data["droneId"] != None:
+                if data["droneId"].strip() == "":
+                    raise Exception("")
                 if not isNumber(data["droneId"]):
                     return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
                 try:
@@ -167,27 +177,43 @@ def setLoad(request, idAux):
                 return error("Please provide the droneId or droneSerialNumber field", status.HTTP_406_NOT_ACCEPTABLE)
 
         try:
-            if data["medicationLoad"] != None:
+            if data["medicationLoad"] != None and len(data["medicationLoad"])>0 :
+                medicationIdList = []
+                for medication in data["medicationLoad"]:
+                    modelSerializer = generateSerializer(Medication)
+                    serializer = modelSerializer(data=medication)
+                    isValid = Medication(medication).__validate__()
+                    if isValid.status_code == status.HTTP_400_BAD_REQUEST:
+                        return isValid
+                    try:
+                        if serializer.is_valid(raise_exception=True):
+                            serializer.save()
+                            medicationIdList.append(serializer.data["id"])
+                    except:
+                        objectM = Medication.objects.get(name = medication["name"])
+                        medicationIdList.append(objectM.id)
+                    
                 dataAux = {
                     "serialNumber": object.serialNumber,
                     "model": object.model,
                     "weightLimit": object.weightLimit,
                     "battery": object.battery,
                     "state": "LOADING",
-                    "medicationLoad": data["medicationLoad"]
+                    "medicationLoad": medicationIdList
                 }
-        except:
-            return error("Please provide the medicationLoad field", status.HTTP_406_NOT_ACCEPTABLE)
+        
 
-        modelSerializer = generateSerializer(Drone)
-        isValid = Drone(dataAux).__validate__()
-        if isValid.status_code == status.HTTP_400_BAD_REQUEST:
-            return isValid
-        dataAux["state"] = "LOADED"
-        serializer = modelSerializer(object, data=dataAux)
-        if serializer.is_valid(raise_exception=True):
-            object = serializer.save()
-            return answer(serializer.data, status.HTTP_202_ACCEPTED)
+            modelSerializer = generateSerializer(Drone)
+            isValid = Drone(dataAux).__validate__()
+            if isValid.status_code == status.HTTP_400_BAD_REQUEST:
+                return isValid
+            dataAux["state"] = "LOADED"
+            serializer = modelSerializer(object, data=dataAux)
+            if serializer.is_valid(raise_exception=True):
+                object = serializer.save()
+                return answer(serializer.data, status.HTTP_202_ACCEPTED)
+        except BaseException as err:
+            return handleError(err)
     return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
 
 
@@ -196,6 +222,8 @@ def checkLoad(request):
         data = JSONParser().parse(request)
         try:
             if data["droneId"] != None:
+                if data["droneId"].strip() == "":
+                    raise Exception("")
                 if not isNumber(data["droneId"]):
                     return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
                 try:
@@ -233,6 +261,8 @@ def getDroneBattery(request, idAux=0):
         data = JSONParser().parse(request)
         try:
             if data["droneId"] != None:
+                if data["droneId"].strip() == "":
+                    raise Exception("")
                 if not isNumber(data["droneId"]):
                     return error("The id most be a number", status.HTTP_406_NOT_ACCEPTABLE)
                 try:
@@ -262,18 +292,17 @@ def getDroneBatteryLogs(request):
         return answer(dataAnswer)
     return error(MESSAGE_DATA_DOES_NOT_MEET_REQUIREMENTS, status.HTTP_406_NOT_ACCEPTABLE)
 
+
 def getDroneBatteryLogsTest():
     while True:
         object = Drone.objects.all()
         for drone in object:
             logging.info({"droneId": drone.id, "serialNumber":drone.serialNumber, "battery":drone.battery, "date":str(datetime.datetime.now())})
         time.sleep(600)
-        
+
 
 t = threading.Thread(target= getDroneBatteryLogsTest)
 t.start()
-
-
 
 
 def proccessUrl(request, idAux):
@@ -282,8 +311,6 @@ def proccessUrl(request, idAux):
         return manageElements(request, model, idAux)
     except BaseException as err:
         return handleError(err)
-
-
 
 
 def isNumber(id):

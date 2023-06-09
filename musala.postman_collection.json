@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "60cc0e2c-1afe-472f-8a67-6f9acf734535",
+		"name": "musala",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET dron",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/manage-drone",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"manage-drone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST dron",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"serialNumber\": \"a-0.1\",     \r\n            \"model\": \"Lightweaight\",\r\n            \"weightLimit\": 234,\r\n            \"battery\": 90,\r\n            \"state\": \"IDLE\"\r\n            \r\n        } "
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/manage-drone",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"manage-drone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT setLoad",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n\t\t\t\"droneId\":\"1\" ,\n\t\t\t\"droneSerialNumber\":\"AAA_3000_ABC_VS-01.\",\n            \"medicationLoad\": [\n\t\t            \t{\n\t\t\t\t            \"name\": \"Sedative\",\n\t\t\t\t            \"weight\": 20,\n\t\t\t\t            \"code\": \"VL2023_UNT2025\",\n\t\t\t\t            \"image\": \"/Sedative.jfif\"\n\t\t        \t\t},\n\t\t        \t\t{\n\t\t\t\t            \"name\": \"Sedative\",\n\t\t\t\t            \"weight\": 20,\n\t\t\t\t            \"code\": \"VL2023_UNT2025\",\n\t\t\t\t            \"image\": \"/Sedative.jfif\"\n\t\t        \t\t}\n            \t]\n            \n        }"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/load-drone",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"load-drone"
+					],
+					"query": [
+						{
+							"key": "imagen",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET checkingLoad",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\n\t\"droneSerialNumber\":\"AAA_3000_ABC_VS-0.1\"\n\t\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/check-drone-load",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"check-drone-load"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET idleDrones",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/check-idle-drones",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"check-idle-drones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST checkBaterry",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"droneId\":\"1\",\n\t\"droneSerialNumber\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/check-drone-batrery",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"check-drone-batrery"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
