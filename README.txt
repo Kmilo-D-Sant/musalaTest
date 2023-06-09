@@ -1,5 +1,10 @@
 ******************* *******Services******* *******************
 
+*******RUN*******
+("root")\musalaTest\musalaTest>python manage.py runserver
+
+*******The function (getDroneBatteryLogsTest) check drone batteries every 10 minutes levels and save it in Battery History.log****
+
 1)******Registering a drone******
 
 URL = http://127.0.0.1:8000/manage-drone (POST)
@@ -116,7 +121,7 @@ URL = http://127.0.0.1:8000/check-idle-drones (GET)
 
 RETURN OK 
 BODY (JSON) =     ### Example ###
-      "datos": 
+      "data": 
         [
             {
                 "id": 7,                                                

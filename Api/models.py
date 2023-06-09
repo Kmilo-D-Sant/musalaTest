@@ -24,7 +24,7 @@ class Medication(models.Model):
         messageError = ""
         if re.match(exLetterNumberScriptUndersocre, self.pk["name"]) == None:
             valid = False
-            messageError += " The name allowed only letters, numbers, '-' and '_'."
+            messageError += " The medications name allowed only letters, numbers, '-' and '_'."
         if re.match(exLetterUpNumberUnderscore, self.pk["code"]) == None:
             valid = False
             messageError += " The code allowed only upper case letters, underscore and numbers."
@@ -51,7 +51,7 @@ class Drone(models.Model):
             messageError += " The serial number only permits 100 characters max and can't be empty."
             valid = False
         if self.pk["weightLimit"] > 500 or self.pk["weightLimit"] < 0:
-            messageError += f" The actual weigh is {self.pk['weight']} and weight can't be bigger than 500gr or smaller than 0."
+            messageError += f" The actual weigh is {self.pk['weightLimit']} and weight can't be bigger than 500gr or smaller than 0."
             valid = False
         if self.pk["battery"] > 100 or self.pk["battery"] < 0:
             messageError += " The battery percent can't be bigger than 100 or smaller than 0."
