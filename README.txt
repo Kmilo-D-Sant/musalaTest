@@ -3,7 +3,7 @@
 *******RUN*******
 ("root")\musalaTest\musalaTest>python manage.py runserver
 
-*******The function (getDroneBatteryLogsTest) check drone batteries every 10 minutes levels and save it in Battery History.log****
+*******The function (getDroneBatteryLogsTest) check drone batteries levels every 10 minutes and save it in Battery History.log****
 
 1)******Registering a drone******
 
